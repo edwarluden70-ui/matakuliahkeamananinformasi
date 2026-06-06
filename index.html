@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Portal Keamanan Informasi | Politeknik Saint Paul Sorong</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        :root { scroll-behavior: smooth; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #f1f5f9; }
+        .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: slideUp 0.5s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        .cyber-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .cyber-card:hover { transform: translateY(-5px); border-color: #06b6d4; box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); }
+    </style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+
+    <header class="lg:hidden glass sticky top-0 p-4 flex justify-between items-center z-50">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-cyan-500 rounded flex items-center justify-center"><i class="fa-solid fa-user-shield text-white text-xs"></i></div>
+            <span class="font-bold tracking-tighter">EL-SECURITY</span>
+        </div>
+        <button id="navToggle" class="p-2"><i class="fa-solid fa-bars-staggered"></i></button>
+    </header>
+
+    <div class="flex flex-col lg:flex-row">
+        <nav id="sidebar" class="hidden lg:block w-full lg:w-80 h-screen sticky top-0 bg-[#0f172a] border-r border-white/5 p-8 flex-shrink-0 z-40">
+            <div class="mb-12">
+                <div class="flex items-center gap-4 mb-3">
+                    <div class="w-12 h-12 bg-gradient-to-tr from-cyan-600 to-blue-600 rounded-xl flex items-center justify-center shadow-xl shadow-cyan-500/20">
+                        <i class="fa-solid fa-shield-halved text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-extrabold text-white leading-none">SEC-PORTAL</h1>
+                        <p class="text-[10px] text-cyan-500 font-bold uppercase tracking-widest mt-1 italic">V. 4.0 Pro Edition</p>
+                    </div>
+                </div>
+                <p class="text-[10px] text-slate-500 font-bold tracking-[3px] uppercase mt-6 border-b border-white/5 pb-2 text-center">Dashboard Navigasi</p>
+            </div>
+
+            <div class="space-y-2">
+                <button onclick="switchTab('materi')" class="nav-btn active w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-sm font-bold transition-all text-cyan-400 bg-cyan-500/10">
+                    <i class="fa-solid fa-book-bookmark"></i> A. MATERI LENGKAP
+                </button>
+                <button onclick="switchTab('tugas')" class="nav-btn w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-sm font-bold transition-all text-slate-400 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-pen-nib"></i> B. TUGAS MANDIRI
+                </button>
+                <button onclick="switchTab('praktikum')" class="nav-btn w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-sm font-bold transition-all text-slate-400 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-vial-circle-check"></i> C. PRAKTIKUM LAB
+                </button>
+                <button onclick="switchTab('format')" class="nav-btn w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-sm font-bold transition-all text-slate-400 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-file-shield"></i> D. FORMAT LAPORAN
+                </button>
+            </div>
+
+            <div class="mt-40 p-6 rounded-3xl bg-slate-900/50 border border-white/5">
+                <p class="text-[10px] text-slate-500 font-bold uppercase mb-2">Instruktur Utama</p>
+                <p class="text-sm font-bold text-white mb-1">Edwar Luden, S.Pd., M.Pd.</p>
+                <p class="text-[10px] text-cyan-500 font-medium">Politeknik Saint Paul Sorong</p>
+            </div>
+        </nav>
+
+        <main class="flex-grow p-6 lg:p-12">
+            
+            <header class="mb-12 flex justify-between items-end">
+                <div>
+                    <p id="breadcrumb" class="text-[10px] text-cyan-500 font-bold uppercase tracking-[4px] mb-2">Home / Dashboard</p>
+                    <h2 id="mainTitle" class="text-4xl font-black text-white">Materi Keamanan Informasi</h2>
+                </div>
+                <div class="hidden md:flex gap-3 text-[10px] font-bold">
+                    <div class="px-4 py-2 bg-white/5 rounded-full border border-white/5">GEN: 2026</div>
+                    <div class="px-4 py-2 bg-cyan-500/10 text-cyan-400 rounded-full border border-cyan-500/20">STATUS: TERVERIFIKASI</div>
+                </div>
+            </header>
+
+            <section id="materi" class="tab-content active space-y-10">
+                <div class="flex gap-4 overflow-x-auto pb-4 custom-scroll">
+                    <button onclick="loadMateri(1)" class="mat-btn whitespace-nowrap px-6 py-3 rounded-xl bg-slate-900 border border-white/10 text-xs font-bold hover:border-cyan-500 transition-all">1. KONSEP DASAR</button>
+                    <button onclick="loadMateri(2)" class="mat-btn whitespace-nowrap px-6 py-3 rounded-xl bg-slate-900 border border-white/10 text-xs font-bold hover:border-cyan-500 transition-all">2. TEKNOLOGI</button>
+                    <button onclick="loadMateri(3)" class="mat-btn whitespace-nowrap px-6 py-3 rounded-xl bg-slate-900 border border-white/10 text-xs font-bold hover:border-cyan-500 transition-all">3. MANAJEMEN</button>
+                    <button onclick="loadMateri(4)" class="mat-btn whitespace-nowrap px-6 py-3 rounded-xl bg-slate-900 border border-white/10 text-xs font-bold hover:border-cyan-500 transition-all">4. CLOUD SECURITY</button>
+                    <button onclick="loadMateri(5)" class="mat-btn whitespace-nowrap px-6 py-3 rounded-xl bg-slate-900 border border-white/10 text-xs font-bold hover:border-cyan-500 transition-all">5. MALWARE & SOC-ENG</button>
+                    <button onclick="loadMateri(6)" class="mat-btn whitespace-nowrap px-6 py-3 rounded-xl bg-slate-900 border border-white/10 text-xs font-bold hover:border-cyan-500 transition-all">6. WEB SECURITY</button>
+                    <button onclick="loadMateri(7)" class="mat-btn whitespace-nowrap px-6 py-3 rounded-xl bg-slate-900 border border-white/10 text-xs font-bold hover:border-cyan-500 transition-all">7. SISTEM OPERASI</button>
+                </div>
+
+                <div id="materiDisplay" class="glass rounded-[40px] p-8 lg:p-16 min-h-[600px] leading-loose text-slate-300">
+                    <div class="text-center py-40">
+                        <i class="fa-solid fa-atom text-7xl text-slate-800 mb-8 animate-spin-slow"></i>
+                        <p class="text-slate-500 italic">Inisialisasi sistem... Silakan pilih sub-materi di atas untuk memuat data.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tugas" class="tab-content space-y-8">
+                <div class="glass p-8 lg:p-12 rounded-[50px] border-t-8 border-cyan-500">
+                    <div class="grid lg:grid-cols-2 gap-8 mb-12">
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2">Identitas Mahasiswa</label>
+                            <input type="text" id="mhsName" placeholder="Masukkan Nama Lengkap Anda" class="w-full bg-slate-950 border border-white/10 rounded-2xl px-6 py-5 focus:outline-none focus:border-cyan-500 text-white shadow-inner">
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2">Kategori Modul Tugas</label>
+                            <select id="modulSelect" onchange="renderQuestions(this.value)" class="w-full bg-slate-950 border border-white/10 rounded-2xl px-6 py-5 focus:outline-none focus:border-cyan-500 text-cyan-400">
+                                <option value="1">Modul 1: Konsep Dasar Keamanan</option>
+                                <option value="2">Modul 2: Teknologi Pengamanan</option>
+                                <option value="3">Modul 3: Manajemen Keamanan</option>
+                                <option value="4">Modul 4: Keamanan Cloud</option>
+                                <option value="5">Modul 5: Malware & Social Engineering</option>
+                                <option value="6">Modul 6: Keamanan Aplikasi Web</option>
+                                <option value="7">Modul 7: Keamanan Sistem Operasi</option>
+                            </select>
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2">Tanggal Pengerjaan</label>
+                            <input type="date" id="tugasDate" class="w-full bg-slate-950 border border-white/10 rounded-2xl px-6 py-5 focus:outline-none focus:border-cyan-500 text-white">
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2">Dosen Pengampu</label>
+                            <input type="text" value="Edwar Luden, S.Pd., M.Pd." readonly class="w-full bg-slate-800 border border-white/5 rounded-2xl px-6 py-5 text-slate-500">
+                        </div>
+                    </div>
+
+                    <div id="soalContainer" class="space-y-8 h-[600px] overflow-y-auto pr-4 custom-scroll mb-10">
+                        </div>
+
+                    <div class="flex flex-col lg:flex-row gap-4">
+                        <button onclick="downloadTugas()" class="flex-grow py-6 bg-cyan-600 hover:bg-cyan-400 text-white font-black rounded-3xl transition-all flex items-center justify-center gap-4 shadow-2xl shadow-cyan-500/20">
+                            <i class="fa-solid fa-file-pdf text-2xl"></i> GENERATE PDF TUGAS
+                        </button>
+                        <a href="https://drive.google.com" target="_blank" class="flex-grow py-6 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-3xl transition-all flex items-center justify-center gap-4 shadow-2xl shadow-emerald-500/20">
+                            <i class="fa-solid fa-cloud-arrow-up text-2xl"></i> KIRIM KE GOOGLE DRIVE
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="praktikum" class="tab-content space-y-10">
+                <div class="grid lg:grid-cols-2 gap-6">
+                    <button onclick="loadPrak(1)" class="cyber-card p-8 bg-slate-900 border border-white/5 rounded-[30px] text-left group">
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="w-14 h-14 bg-cyan-500/10 rounded-2xl flex items-center justify-center text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-all"><i class="fa-solid fa-diagram-project text-2xl"></i></div>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Prak-01</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-2">Analisis Jaringan (Wireshark)</h4>
+                        <p class="text-xs text-slate-500 italic">Metode Sniffing & Analisis Paket TCP/IP</p>
+                    </button>
+                    <button onclick="loadPrak(2)" class="cyber-card p-8 bg-slate-900 border border-white/5 rounded-[30px] text-left group">
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all"><i class="fa-solid fa-gauge-high text-2xl"></i></div>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Prak-02</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-2">Parameter QoS (Throughput)</h4>
+                        <p class="text-xs text-slate-500 italic">Kalkulasi Bandwidth & Kualitas Koneksi</p>
+                    </button>
+                    <button onclick="loadPrak(3)" class="cyber-card p-8 bg-slate-900 border border-white/5 rounded-[30px] text-left group">
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-all"><i class="fa-solid fa-lock text-2xl"></i></div>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Prak-03</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-2">Cisco Security Basic</h4>
+                        <p class="text-xs text-slate-500 italic">Standard Hardening Perangkat Cisco</p>
+                    </button>
+                    <button onclick="loadPrak(4)" class="cyber-card p-8 bg-slate-900 border border-white/5 rounded-[30px] text-left group">
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-all"><i class="fa-solid fa-network-wired text-2xl"></i></div>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Prak-04</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-2">Implementasi Cisco Security</h4>
+                        <p class="text-xs text-slate-500 italic">Extended Access Control List (ACL)</p>
+                    </button>
+                    <button onclick="loadPrak(5)" class="lg:col-span-2 cyber-card p-8 bg-slate-900 border border-white/5 rounded-[30px] text-left group">
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="w-14 h-14 bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-400 group-hover:bg-rose-500 group-hover:text-white transition-all"><i class="fa-solid fa-user-secret text-2xl"></i></div>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Prak-05</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-2">Praktikum Web Phishing (Analisis)</h4>
+                        <p class="text-xs text-slate-500 italic">Investigasi Source Code & Mitigasi Penipuan</p>
+                    </button>
+                </div>
+
+                <div id="prakDisplay" class="glass rounded-[50px] p-8 lg:p-16 min-h-[400px]">
+                    <div class="text-center py-20 text-slate-500 italic">Pilih modul praktikum di atas untuk memuat Jobsheet Lengkap</div>
+                </div>
+            </section>
+
+            <section id="format" class="tab-content space-y-10">
+                <div class="glass p-12 rounded-[50px] border-l-8 border-cyan-500">
+                    <h3 class="text-2xl font-bold text-white mb-10 flex items-center gap-4">
+                        <i class="fa-solid fa-file-contract text-cyan-500"></i> Standar Operasional Laporan
+                    </h3>
+                    <div class="grid lg:grid-cols-2 gap-12">
+                        <div class="space-y-8">
+                            <div class="flex gap-6">
+                                <div class="w-12 h-12 bg-cyan-500/20 text-cyan-400 flex-shrink-0 flex items-center justify-center rounded-2xl font-black italic">01</div>
+                                <div>
+                                    <h5 class="text-white font-bold mb-1">Elemen Sampul (Cover)</h5>
+                                    <p class="text-xs text-slate-400">Wajib memuat Logo Politeknik Saint Paul, Nama Mahasiswa, NIM, Judul Modul, dan Nama Dosen Pengampu.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6">
+                                <div class="w-12 h-12 bg-cyan-500/20 text-cyan-400 flex-shrink-0 flex items-center justify-center rounded-2xl font-black italic">02</div>
+                                <div>
+                                    <h5 class="text-white font-bold mb-1">Struktur Konten Dasar</h5>
+                                    <p class="text-xs text-slate-400">BAB I: Tujuan, BAB II: Landasan Teori, BAB III: Hasil & Pembahasan (SS), BAB IV: Kesimpulan.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6">
+                                <div class="w-12 h-12 bg-cyan-500/20 text-cyan-400 flex-shrink-0 flex items-center justify-center rounded-2xl font-black italic">03</div>
+                                <div>
+                                    <h5 class="text-white font-bold mb-1">Ketentuan Gambar (Screenshot)</h5>
+                                    <p class="text-xs text-slate-400">Setiap Screenshot hasil praktikum wajib menyertakan watermark Nama/NIM yang diketik di dalam terminal/browser.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-8 bg-slate-900/50 rounded-[40px] border border-white/10 italic text-sm text-slate-400 leading-loose">
+                            "Laporan dikumpulkan dalam format PDF kepada link drive yang disediakan dosen dengan margin Kiri: 4cm, Kanan: 3cm, Atas: 3cm, Bawah: 3cm. Menggunakan font Times New Roman 12pt dengan spasi 1.5. Batas pengumpulan adalah H+3 setelah praktikum dilaksanakan."
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const { jsPDF } = window.jspdf;
+
+        // Database Jurnal (35 Link Nasional Aktif)
+        const journalDB = {
+            1: [
+                { t: "Dasar prinsip Keamanan Informasi", l: "https://mitraberdaya.id/id/news-information/prinsip-keamanan-informasi" },
+                { t: "Ancaman keamanan pada sistem informasi", l: "https://siberpublisher.org/index.php/JPSN/article/download/48/42" },
+                { t: "Kajian Literatur Implementasi CIA Triad", l: "https://gudangjurnal.com/index.php/gjmi/article/download/1761/1686" },
+                { t: "Analisis Risiko Menggunakan OCTAVE Allegro", l: "https://ejournal.itn.ac.id/index.php/jati/article/download/12951/7353" },
+                { t: "Studi Keamanan Informasi pada Sektor Publik", l: "https://journal.sbm.itb.ac.id/index.php/mantek/article/view/3410" }
+            ],
+            2: [
+                { t: "Analisis Perbandingan Firewall", l: "https://www.wallblock.co.id/cybersecurity/berikut-11-daftar-merek-firewall-jaringan-terbaik/" },
+                { t: "Implementasi IDS Snort pada Jaringan Kampus", l: "https://media.neliti.com/media/publications/224996-implementasi-intrusion-detection-system-c2ec7f39.pdf" },
+                { t: "Optimasi Enkripsi AES-256 pada Data Medis", l: "https://informatika.stei.itb.ac.id/~rinaldi.munir/Kriptografi-dan-Koding/2022-2023/Makalah2023/Makalah-KriptoKoding-2023%20(25).pdf" },
+                { t: "Peran Manajemen Sekuriti Pada Cia Triad", l: "http://repository.ubharajaya.ac.id/35092/1/Artikel%20Juni%202024.pdf" },
+                { t: "Analisis Kriptografi RSA untuk Keamanan Email", l: "https://media.neliti.com/media/publications/579966-implementasi-kriptografi-dalam-pengamana-b420f979.pdf" }
+            ],
+            3: [
+                { t: "Implementasi ISO 27001 pada Perguruan Tinggi", l: "https://ojs.dcckotabumi.ac.id/index.php/jik/article/view/782" },
+                { t: "Audit Keamanan Sistem", l: "https://ojs.unikom.ac.id/index.php/jurnal-unikom/article/download/1355/956" },
+                { t: "Analisis Risiko Keamanan Indeks KAMI v4.0", l: "https://jiemar.org/index.php/jiemar/article/download/196/149" },
+                { t: "Analisis Jaringan Fiber Optic", l: "https://journal.ppmi.web.id/index.php/jrsit/article/view/3433" },
+                { t: "Analisis Jaringan Fiber Optic 2", l: "https://jurnal.pnj.ac.id/index.php/multinetics/article/download/2787/pdf_1" }
+            ],
+            4: [
+                { t: "Keamanan Data pada Public Cloud Storage", l: "https://cloud.google.com/learn/what-is-cloud-data-security?hl=id" },
+                { t: "Evaluasi Keamanan Cloud Computing", l: "https://jurnalmahasiswa.com/index.php/jriin/article/download/1209/1038" },
+                { t: "Implementasi Enkripsi Homomorfik di Cloud", l: "https://sis.binus.ac.id/2026/01/20/enkripsi-homomorfik-masa-depan-keamanan-data/" },
+                { t: "Analisis Serangan Man-in-the-Cloud (MITC)", l: "https://jurnalmahasiswa.com/index.php/jriin/article/view/1209" },
+                { t: "Virtualisasi dalam Infrastruktur IT Modern", l: "https://www.idn.id/virtualisasi-dalam-infrastruktur-it-modern/" }
+            ],
+            5: [
+                { t: "Social Engineering: Pengertian, Jenis, Contoh, dan Cara Mencegah", l: "https://msf.telkomuniversity.ac.id/social-engineering-pengertian-jenis-contoh-dan-cara-mencegah/" },
+                { t: "Pencegahan Phishing Menggunakan Deep Learning", l: "https://taskup.id/mengatasi-serangan-phishing-kekuatan-deep-learning-dalam-deteksi-dini/" },
+                { t: "Ransomware", l: "https://msf.telkomuniversity.ac.id/ransomware-adalah-pengertian-jenis-dampak-cara-melindungi/" },
+                { t: "Identifikasi Malware pada Sistem Operasi Android", l: "https://csirt.banjarmasinkota.go.id/posts/malware-di-hp-android-simak-cara-deteksi-dan-menghapusnya" },
+                { t: "Analisis Taktik Manipulasi Psikologis Phishing", l: "https://www.telkomsel.com/enterprise/insight/blog/ancaman-phishing-dan-social-engineering" }
+            ],
+            6: [
+                { t: "SQL Injection attacks", l: "https://msf.telkomuniversity.ac.id/sql-injection-adalah-pengertian-jenis-contoh-dan-cara-mencegah/" },
+                { t: "Pencegahan XSS", l: "https://www.rumahweb.com/journal/xss-adalah/" },
+                { t: "Keamanan Aplikasi Web", l: "https://phintraco.com/keamanan-aplikasi-web/" },
+                { t: "Kerentanan API pada Layanan Publik", l: "https://www.logique.co.id/blog/2024/07/22/kerentanan-keamanan-api-scr/" },
+                { t: "Web Aplication Firewal", l: "https://elitery.com/articles/web-application-firewall-pengertian-manfaat-dan-cara-kerja/" }
+            ],
+            7: [
+                { t: "Konsep Keamanan Sistem Operasi", l: "https://sis.binus.ac.id/2024/09/04/konsep-keamanan-sistem-operasi/" },
+                { t: "Analisis Keamanan Kernel Sistem Operasi", l: "https://www.uib.ac.id/apa-itu-kernel-dalam-sistem-operasi/" },
+                { t: "Keamanan Windows vs Linux", l: "https://sis.binus.ac.id/2022/01/14/perbedaan-windows-vs-linux/" },
+                { t: "Privilege Management pada OS", l: "https://magnaglobal.id/articles/mengenal-apa-itu-privileged-access-management-dan-manfaatnya-untuk-bisnis" },
+                { t: "Patch Management pada Jaringan ", l: "https://edavos.com/patch-management/" }
+            ]
+        };
+
+        // Database Soal (20 per Materi = 140 Soal)
+        const taskQuestions = {
+            1: ["Apa defenisi Keamanan Informasi menurut standar ISO 27001?", "Sebutkan dan jelaskan 3 pilar CIA Triad!", "Mengapa 'Availability' sangat krusial bagi sistem perbankan?", "Jelaskan perbedaan antara Ancaman (Threat) dan Kerentanan (Vulnerability)!", "Apa itu Parkerian Hexad dan sebutkan 3 elemen tambahannya?", "Jelaskan prinsip 'Least Privilege'!", "Jelaskan Rangkuman dari sumber ke 3 pada materi 1?", "Bagaimana cara menjaga integritas data saat pengiriman?", "Jelaskan rangkuman hasil apa yang ada baca pada materi ke 02?", "Apa peran Non-repudiation dalam transaksi elektronik?", "Jelaskan apa itu Zero Trust Architecture!", "Mengapa faktor manusia disebut sebagai mata rantai terlemah?", "Jelaskan kelemahan dan kelebihan dalam hasil pada jurnal materi no 04 ?", "Jelaskan konsep 'Defense in Depth'!", "Bagaimana peran enkripsi dalam CIA Triad?", "Sebutkan 3 jenis kontrol keamanan (Administratif, Teknis, Fisik)!", "Apa itu Social Engineering secara singkat?", "Bagaimana hubungan keamanan informasi dengan privasi?", "Sebutkan dampak ekonomi dari insiden keamanan siber!", "Mengapa audit keamanan perlu dilakukan secara berkala?"],
+            2: ["Apa fungsi utama dari Firewall dalam jaringan?", "Bedakan antara IDS dan IPS!", "Bagaimana cara kerja Next-Generation Firewall (NGFW)?", "Jelaskan perbedaan enkripsi Simetris dan Asimetris!", "Apa itu Hashing dan mengapa tidak bisa didekripsi?", "Sebutkan keunggulan algoritma AES dibanding DES!", "Bagaimana cara kerja Digital Signature?", "Apa fungsi dari SSL/TLS pada website?", "Sebutkan 3 jenis enkripsi yang sering digunakan!", "Apa itu VPN dan bagaimana ia mengamankan data?", "jelaskan kesimpulan dari referensi 01?", "Apa itu Honeypot dalam strategi pertahanan?", "Jelaskan teknologi Biometrik sebagai autentikasi!", "Jelaskan bagaimana penelasan gambar 1 pada sumber referensi 03?", "jelaskan kesimpulan bacaan pada materi referensi 04?", "Bagaimana cara kerja Packet Filtering pada Router?", "Apa itu DMZ (Demilitarized Zone) dalam arsitektur jaringan?", "Jelaskan peran Antivirus/EDR di tingkat endpoint!", "Bagaimana cara mengamankan jalur komunikasi SSH?", "Apa perbedaan antara WAF dan Network Firewall?"],
+            3: ["Apa tujuan utama dari standar ISO 27001?", "Jelaskan siklus PDCA dalam manajemen keamanan!", "Sebutkan 4 strategi penanganan risiko (Risk Treatment)!", "Apa itu Risk Assessment dan mengapa penting?", "Sebutkan 3 materi penting dari bacaan referensi 01?", "jelaskan 2 hal yang menurut anda menjadi masalah utama pada referensi 02?", "Apa itu Business Continuity Plan (BCP)?", "Sebutkan langkah-langkah dalam Incident Response!", "Apa perbedaan antara BCP dan Disaster Recovery Plan (DRP)?", "Bagaimana cara melakukan audit keamanan berbasis ISO 27001?", "Apa itu Indeks KAMI (Keamanan Informasi)?", "Jelaskan klasifikasi data (Public, Internal, Confidential, Secret)!", "Mengapa pelatihan Awareness bagi karyawan sangat krusial?", "Bagaimana cara menangani risiko yang 'diterima' (Accept)?", "Jelaskan bagaimana perancangan jaringan pada referensi 04?", "Jelaskan fungsi dari alat pada gambar 4 dalam referensi 05?", "Bagaimana regulasi UU ITE di Indonesia terkait keamanan?", "Sebutkan kriteria pemilihan kontrol keamanan!", "Apa itu manajemen aset dalam konteks keamanan?", "Mengapa dokumentasi sangat penting dalam audit?"],
+            4: ["Jelaskan konsep Shared Responsibility Model di Cloud!", "Apa perbedaan keamanan pada SaaS, PaaS, dan IaaS?", "Sebutkan 3 ancaman utama di lingkungan Cloud Computing!", "Apa itu IAM (Identity and Access Management)?", "Bagaimana cara mengamankan data 'at rest' di Cloud?", "Apa itu Virtualization Security?", "Jelaskan risiko 'Data Remanence' di Cloud!", "Apa peran enkripsi dalam layanan Cloud Storage?", "Apa itu Cloud Access Security Broker (CASB)?", "Sebutkan risiko multi-tenancy di Cloud!", "Bagaimana cara kerja VPC (Virtual Private Cloud)?", "Apa itu DDoS Attack pada infrastruktur Cloud?", "Bagaimana cara audit layanan Cloud pihak ketiga?", "Jelaskan apa itu Serverless Security!", "Bagaimana regulasi kedaulatan data (Data Sovereignty)?", "Apa itu API Security di lingkungan Cloud?", "Jelaskan pentingnya Patch Management di VM Cloud!", "Bagaimana cara mitigasi Account Hijacking?", "Apa itu 'Shadow IT' dan dampaknya?", "Sebutkan 3 Provider Cloud besar dan fitur keamanannya!"],
+            5: ["Apa perbedaan mendasar antara Virus, Worm, dan Trojan?", "Jelaskan mekanisme kerja Ransomware!", "Jelaskan 3 poin rangkuman hasil anda membaca pada referensi 03?", "Apa itu Spear Phishing dan target utamanya?", "Jelaskan teknik Social Engineering 'Baiting'!", "Bagaimana malware jenis Rootkit menyembunyikan diri?", "Apa itu Spyware dan dampaknya bagi privasi?", "Jelaskan serangan 'Pretexting'!", "Bagaimana malware 'Fileless' bekerja?", "Apa itu Botnet dan perannya dalam DDoS?", "Sebutkan 3 teknik mitigasi Malware!", "Mengapa karyawan sering terjebak Social Engineering?", "Apa itu Keylogger dan cara mendeteksinya?", "Jelaskan bahaya penggunaan USB drive asing (Quid Pro Quo)!", "Apa itu Tailgating dalam keamanan fisik?", "Bagaimana cara kerja Adware?", "Sebutkan contoh serangan Social Engineering paling terkenal!", "Apa peran Antivirus berbasis Behavioral Analysis?", "Bagaimana cara melaporkan email phishing di kantor?", "Jelaskan pentingnya Sandbox dalam analisis malware!"],
+            6: ["Apa itu OWASP Top 10?", "Jelaskan cara kerja serangan SQL Injection!", "Apa perbedaan Reflected XSS dan Stored XSS?", "Bagaimana cara mencegah serangan Cross-Site Request Forgery (CSRF)?", "Apa itu Broken Authentication?", "Jelaskan 3 poin rangkuman hasil anda membaca pada referensi 03?", "Apa itu Insecure Direct Object References (IDOR)?", "Bagaimana cara kerja serangan Brute Force pada Login Form?", "Jelaskan 3 poin rangkuman hasil anda membaca pada referensi 04?", "Jelaskan apa itu Clickjacking!", "Bagaimana cara mengamankan Session Cookie?", "Apa itu HTTPS dan mengapa port 443 lebih aman?", "Jelaskan fungsi Web Application Firewall (WAF)!", "Apa itu Directory Traversal Attack?", "Bagaimana cara validasi input untuk mencegah injeksi?", "Apa itu Parameter Tampering?", "Jelaskan bahaya penggunaan komponen web yang 'outdated'!", "Apa itu serangan 'Man-in-the-Middle' pada aplikasi web?", "Jelaskan pentingnya audit log pada web server!", "Apa itu 'HSTS' (HTTP Strict Transport Security)?"],
+            7: ["Apa itu OS Hardening?", "Jelaskan pentingnya Patch Management sistem operasi!", "Apa fungsi dari User Access Control (UAC) di Windows?", "Bagaimana cara mematikan servis (services) yang tidak perlu?", "Jelaskan konsep 'Root' pada Linux dan risikonya!", "Jelaskan 2 poin kelebihan dalam materi pada referensi 4?", "Bagaimana cara mengamankan jalur SSH di Linux?", "Jelaskan 3 poin rangkuman hasil anda membaca pada referensi 03?", "Jelaskan pentingnya enkripsi full-disk (BitLocker/LUKS)!", "Bagaimana cara mengamankan Bootloader (GRUB)?", "Apa itu Kernel Security?", "Sebutkan 3 sistem operasi yang fokus pada keamanan!", "Bagaimana cara audit user account di Windows?", "Jelaskan 3 poin rangkuman hasil anda membaca pada referensi 05?", "Bagaimana cara membatasi akses fisik ke server?", "Apa itu sistem operasi 'Hardened'?", "Bagaimana cara mencegah eksekusi skrip otomatis (Autorun)?", "Jelaskan peran Firewall bawaan OS (Windows Firewall/IPTables)!", "Apa itu 'Log Rotation' dan mengapa penting?", "Bagaimana cara backup registry Windows secara aman?"]
+        };
+
+        // Navigation Controller
+        function switchTab(id) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active', 'text-cyan-400', 'bg-cyan-500/10'));
+            
+            document.getElementById(id).classList.add('active');
+            event.currentTarget.classList.add('active', 'text-cyan-400', 'bg-cyan-500/10');
+            
+            const titles = { 'materi': 'Materi Keamanan Informasi', 'tugas': 'Penugasan Mahasiswa', 'praktikum': 'Laboratorium Praktikum', 'format': 'Format Laporan' };
+            document.getElementById('mainTitle').innerText = titles[id];
+            document.getElementById('breadcrumb').innerText = `Home / ${titles[id]}`;
+            
+            if(id === 'tugas') renderQuestions(document.getElementById('modulSelect').value);
+        }
+
+        // Materi Engine
+        function loadMateri(id) {
+            const mDB = {
+                1: { t: "Konsep Dasar Keamanan Informasi", i: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200", c: "Keamanan Informasi bukan sekadar perihal teknis, melainkan sebuah ekosistem yang menjaga kerahasiaan, integritas, dan ketersediaan data. Di era digital saat ini, data telah menjadi aset yang lebih berharga daripada infrastruktur fisik. Konsep dasar ini mencakup pemahaman tentang CIA Triad (Confidentiality, Integrity, Availability). Mahasiswa wajib memahami bahwa keamanan adalah sebuah proses berkelanjutan, bukan hasil akhir. <br><br> <strong>1. Confidentiality:</strong> Menjamin bahwa informasi hanya dapat diakses oleh pihak yang sah. Contoh: Enkripsi data mahasiswa di database kampus. <br> <strong>2. Integrity:</strong> Menjamin data tidak diubah secara tidak sah selama penyimpanan atau pengiriman. Contoh: Hashing pada file akademik. <br> <strong>3. Availability:</strong> Menjamin data dan sistem selalu siap saat dibutuhkan oleh user yang sah. Contoh: Sistem KRS yang tahan terhadap serangan DDoS." },
+                2: { t: "Teknologi Pengamanan Jaringan", i: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200", c: "Teknologi pengamanan jaringan bertindak sebagai benteng pertahanan digital. Firewall, IDS (Intrusion Detection System), dan IPS (Intrusion Prevention System) adalah komponen krusial dalam infrastruktur TI modern. Firewall menyaring lalu lintas data berdasarkan aturan keamanan, sementara IDS/IPS memantau anomali yang mencurigakan secara real-time. <br><br> Selain itu, Kriptografi menjadi tulang punggung keamanan data. Algoritma seperti AES (Advanced Encryption Standard) untuk enkripsi simetris dan RSA untuk asimetris memastikan data yang dicuri tetap tidak terbaca oleh pihak yang tidak berwenang." },
+                3: { t: "Manajemen Keamanan (ISO 27001)", i: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200", c: "Manajemen keamanan berfokus pada tata kelola dan standar operasional. ISO/IEC 27001 adalah standar internasional untuk Information Security Management System (ISMS). Pendekatan manajemen ini melibatkan penilaian risiko (Risk Assessment) secara berkala dan pemilihan kontrol keamanan yang tepat untuk memitigasi potensi kerugian organisasi. <br><br> Elemen penting lainnya adalah kepatuhan (compliance) terhadap regulasi lokal seperti UU ITE dan UU Perlindungan Data Pribadi (PDP) di Indonesia." },
+                4: { t: "Keamanan Cloud Computing", i: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=1200", c: "Cloud Computing menawarkan fleksibilitas, namun membawa tantangan keamanan baru. Shared Responsibility Model menjelaskan bahwa provider (seperti AWS/Google) bertanggung jawab atas infrastruktur, sedangkan pengguna bertanggung jawab atas keamanan data di dalamnya. <br><br> Ancaman utama meliputi miskonfigurasi kontrol akses, kebocoran data akibat API yang lemah, dan serangan Man-in-the-Cloud (MITC). Proteksi Identitas (IAM) menjadi sangat vital di lingkungan cloud." },
+                5: { t: "Malware & Social Engineering", i: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1200", c: "Malware adalah perangkat lunak jahat (Virus, Worm, Ransomware) yang dirancang untuk merusak. Namun, tantangan terbesar saat ini adalah Social Engineering—manipulasi psikologis manusia untuk membocorkan rahasia. Phishing, Vishing, dan Smishing adalah teknik yang menargetkan kelengahan user. <br><br> Edukasi User Awareness merupakan strategi pertahanan paling efektif karena manusia seringkali menjadi mata rantai terlemah (the weakest link) dalam sistem keamanan." },
+                6: { t: "Keamanan Aplikasi Web (OWASP)", i: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200", c: "Aplikasi web adalah pintu masuk utama serangan siber. OWASP Top 10 menyediakan daftar risiko paling kritis, seperti SQL Injection, Cross-Site Scripting (XSS), dan Broken Access Control. <br><br> Mahasiswa harus memahami cara kerja sanitasi input dan validasi data untuk mencegah injeksi perintah berbahaya ke dalam server database. Implementasi HTTPS dan WAF (Web Application Firewall) merupakan standar wajib saat ini." },
+                7: { t: "Keamanan Sistem Operasi", i: "https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=1200", c: "OS Hardening adalah proses memperkuat keamanan sistem operasi dengan menutup servis yang tidak perlu dan membatasi hak akses. Patch Management sangat krusial untuk menutup celah keamanan (zero-day vulnerabilities) yang baru ditemukan. <br><br> Pengaturan hak akses minimal (Least Privilege) menjamin user hanya memiliki akses yang benar-benar dibutuhkan, sehingga jika akun kompromi, dampak kerusakan dapat diminimalisir." }
+            };
+
+            const data = mDB[id];
+            const journals = journalDB[id];
+
+            document.getElementById('materiDisplay').innerHTML = `
+                <img src="${data.i}" class="w-full h-96 object-cover rounded-[35px] mb-10 border border-white/10 shadow-2xl">
+                <h3 class="text-3xl font-black text-white mb-6 border-b border-white/5 pb-4">${data.t}</h3>
+                <p class="text-lg leading-relaxed mb-12">${data.c}</p>
+                
+                <h4 class="text-xs font-bold text-cyan-400 uppercase tracking-[4px] mb-6 flex items-center gap-3">
+                    <span class="w-10 h-[1px] bg-cyan-400"></span> Referensi Jurnal Nasional Terkait
+                </h4>
+                <div class="grid lg:grid-cols-1 gap-3">
+                    ${journals.map((j, i) => `
+                        <a href="${j.l}" target="_blank" class="p-5 bg-white/5 border border-white/5 rounded-2xl flex justify-between items-center hover:bg-cyan-500/10 hover:border-cyan-500 transition-all group">
+                            <span class="text-sm font-bold"><span class="text-cyan-500 mr-2">0${i+1}</span> ${j.t}</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-cyan-500 opacity-0 group-hover:opacity-100"></i>
+                        </a>
+                    `).join('')}
+                </div>
+            `;
+            
+            document.querySelectorAll('.mat-btn').forEach(b => b.classList.remove('border-cyan-500', 'text-cyan-400'));
+            event.currentTarget.classList.add('border-cyan-500', 'text-cyan-400');
+        }
+
+        // Tugas Questions Renderer
+        function renderQuestions(id) {
+            const container = document.getElementById('soalContainer');
+            const questions = taskQuestions[id];
+            container.innerHTML = questions.map((q, i) => `
+                <div class="p-6 bg-slate-900 border border-white/5 rounded-3xl space-y-4">
+                    <p class="text-sm font-bold text-white"><span class="text-cyan-500 mr-2">${i+1}.</span> ${q}</p>
+                    <textarea id="jawaban${i}" placeholder="Tuliskan analisis teknis Anda..." class="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-cyan-500 transition-all text-sm min-h-[120px] text-slate-300"></textarea>
+                </div>
+            `).join('');
+        }
+
+        // PDF Download Engine
+        function downloadTugas() {
+            const name = document.getElementById('mhsName').value;
+            const date = document.getElementById('tugasDate').value;
+            if(!name || !date) return alert("Sistem: Nama dan Tanggal wajib diisi!");
+
+            const doc = new jsPDF();
+            const id = document.getElementById('modulSelect').value;
+            const questions = taskQuestions[id];
+
+            doc.setFontSize(22);
+            doc.text("LAPORAN JAWABAN TUGAS AKADEMIK", 20, 20);
+            doc.setFontSize(12);
+            doc.text(`Mahasiswa: ${name}`, 20, 32);
+            doc.text(`Dosen: Edwar Luden, S.Pd., M.Pd.`, 20, 39);
+            doc.text(`Modul: Keamanan Informasi - Sub ${id}`, 20, 46);
+            doc.text(`Tanggal: ${date}`, 20, 53);
+            doc.line(20, 58, 190, 58);
+
+            let yPos = 68;
+            questions.forEach((q, i) => {
+                const ans = document.getElementById(`jawaban${i}`).value || "(Mahasiswa tidak memberikan jawaban)";
+                if(yPos > 270) { doc.addPage(); yPos = 20; }
+                doc.setFont("helvetica", "bold");
+                doc.text(`${i+1}. ${q}`, 20, yPos);
+                doc.setFont("helvetica", "normal");
+                const splitAns = doc.splitTextToSize(ans, 170);
+                doc.text(splitAns, 20, yPos + 7);
+                yPos += (splitAns.length * 7) + 15;
+            });
+
+            doc.save(`Tugas_KeamananInfo_${name.replace(/\s+/g, '_')}.pdf`);
+        }
+
+        // Praktikum Engine
+        function loadPrak(id) {
+            const pDB = {
+                1: {
+                    t: "Analisis Jaringan dengan Wireshark",
+                    a: "Perangkat Lunak Wireshark yang sudah terinstal.",
+                    img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800",
+                    s: [
+                        "Inisialisasi Perangkat: Jalankan aplikasi Wireshark sebagai Administrator pada PC Anda. Pilih interface jaringan yang aktif (misalnya Wi-Fi atau Ethernet). Langkah ini sangat penting untuk memastikan kartu jaringan Anda berada dalam mode promiscuous guna menangkap semua paket yang lewat.",
+                        "Analisis Paket HTTP: Buka browser dan akses situs 'http://example.com'. Gunakan filter bar Wireshark dengan mengetik 'http' untuk menyaring lalu lintas data yang tidak terenkripsi. Mahasiswa wajib menganalisis bagaimana data plaintext dikirimkan tanpa proteksi SSL/TLS.",
+                        "Eksplorasi TCP Three-Way Handshake: Carilah paket dengan flag SYN, SYN-ACK, dan ACK. Deskripsikan secara teknis minimal 100 kata mengenai proses inisiasi koneksi TCP yang Anda temukan di kolom info Wireshark, dan bandingkan dengan teori yang dipelajari di kelas.",
+                        "Dokumentasi Analisis: Hentikan capture paket. Klik kanan pada paket TCP lalu pilih 'Follow -> TCP Stream'. Dokumentasikan temuan Anda dalam bentuk Screenshot yang mencantumkan nama/NIM Anda di header terminal/Wireshark."
+                    ]
+                },
+                2: {
+                    t: "Mengukur Throughput, Packet Loss, Delay dan Jitter (Parameter QoS) Menggunakan Wireshark",
+                    a: "2 PC (Server & Client), Software iPerf3, Kabel LAN Cat 6.",
+                    img: "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?w=800",
+                    s: [
+                        "Pastikan Wireshark sudah terinstal dan berjalan, lalu pilih antarmuka jaringan yang aktif.",
+                        "Mulai proses Capture paket di Wireshark.",
+                        "Lakukan aktivitas jaringan yang akan diukur (misalnya: transfer file besar atau menjalankan **Iperf**)",
+                        "Hentikan capture dan lakukan filter paket yang relevan (misalnya: filter IP atau protokol)",
+                        "Gunakan fitur Statistics > Throughput di Wireshark untuk mendapatkan data Throughput",
+                        "Analisis kolom Time dan Sequence Number untuk menghitung Packet Loss, Delay, dan Jitter dan buat datanya di exel dengan 3 kali percobaan untuk 1 jaringan",
+                        "Jika kesusahan bisa melihat cara melakukan perhitungan Cara Mengukur Throughput, Packet Loss, Delay dan Jitter (Parameter QoS) Menggunakan Wireshark di Youtube"
+                    ]
+                },
+                3: {
+                    t: " Implementasi Keamanan Jaringan dengan cisco",
+                    a: "Cisco Packet Tracer / Router Cisco Fisik.",
+                    img: "https://images.unsplash.com/photo-1597733336794-12d05021d510?w=800",
+                    s: [
+                        "Pastikan perangkat Cisco atau simulasi telah terhubung dan berfungsi",
+                        "(Hubungkan router/switch Cisco ke PC klien)",
+                        "Atur alamat IP dasar untuk router, switch, dan PC",
+                        "Topologi: Bangun topologi jaringan minimal 2 router Cisco dan 2 host (PC/Laptop)",
+                        "Konfigurasi Dasar:Berikan alamat IP dan routing dasar pada semua perangkat.",
+                        "Verifikasi Koneksi: Pastikan semua host dapat melakukan ping ke host lain sebelum ACL diterapkan.",
+                        "Buat Extended ACL",
+                        "Penerapan ACL:** Terapkan ACL pada *interface* yang tepat (biasanya *interface* yang paling dekat dengan *destination*)",
+                        "Pengujian: Uji koneksi **Telnet** dan **HTTP** dari *subnet* 192.168.1.0. Pastikan *ping* (*ICMP*) tetap berfungsi.catat hasilnya dan bandingkan dengan ekspektasi.",
+                        "jika kesusahan, nonton di link youtube berikut : https://www.youtube.com/watch?v=OqTeQUwO-ag"
+                    ]
+                },
+                4: {
+                    t: "Implementasi Cisco 2",
+                    a: "Implementasi Keamanan pada Topologi 4 Router & 4 PC",
+                    img: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800",
+                    s: [
+                        "Praktikum ini melibatkan konfigurasi keamanan pada topologi **4 Router** yang terhubung secara *mesh* parsial, dengan masing-masing router terhubung ke satu *Local Area Network* (LAN) yang berisi 1 PC.",
+                        "Skema Topologi 4 Router dan 4 PC (Router A, B, C, D)",
+                        "Alokasi IP Address Contoh: LAN A (PC1):** 192.168.10.0/24  LAN B (PC2):** 192.168.20.0/24  LAN C (PC3):** 192.168.30.0/24  LAN D (PC4/Server):** 192.168.40.0/24",
+                        "LANGKAH-LANGKAH",
+                        "Setup Topologi & IP Dasar:** Buat koneksi fisik dan konfigurasi alamat IP pada semua *interface* Router (WAN Link) dan PC (LAN Link)",
+                        "Konfigurasi Routing Dinamis (EIGRP/OSPF):** Aktifkan protokol *routing* di keempat router agar semua PC dapat berkomunikasi satu sama lain. Verifikasi dengan **ping** dari PC1 ke PC4",
+                        "Skenario Keamanan (Extended ACLs):** Terapkan kebijakan berikut",
+                        "Di Router A:** Blokir akses **HTTP (Port 80)** dari **LAN C** (192.168.30.0) menuju **LAN D (Server)** (192.168.40.0).",
+                        "Di Router B:** Blokir akses **Telnet (Port 23)** dari **LAN B** (192.168.20.0) ke semua *interface* Router C untuk manajemen",
+                        "Verifikasi Keamanan:** Uji koneksi **HTTP** dari PC3 ke PC4 (harus gagal) dan uji koneksi **Telnet** dari PC2 ke Router C (harus gagal). Pastikan *ping* di semua jalur tetap berhasil.",
+                        "Selamat bekerja = Kumpul Laporan Pada link Yang diberikan dosen anda"
+                    ]
+                },
+                5: {
+                    t: "Rekayasa Web Tiruan (Phishing Simulation)",
+                    a: "Praktikum ini bertujuan untuk memahami mekanisme serangan *Credential Harvesting* agar mahasiswa mampu merancang sistem pertahanan web yang valid. Dilarang keras menyalahgunakan kode hasil praktikum ini di luar lingkungan laboratorium!.",
+                    img: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800",
+                    s: [
+                        "Setiap mahasiswa diwajibkan membangun sebuah replika halaman login (Web Tiruan/Phishing) secara lokal menggunakan HTML, CSS, dan backend penampung data (PHP/Node.js) untuk mensimulasikan bagaimana data sensitif dicuri.",
+                        "Pilih platform populer yang akan di buatkan web tiruannya (Contoh: Login SIAKAD, Media Sosial, atau Layanan Email).",
+                        "Gunakan teknik Inspect Element untuk menyalin struktur HTML dan CSS agar semirip mungkin dengan aslinya atau buat sendiri.",
+                        "Di tampilan dasboard tampilkan tulisan praktikum, nama mahasiswa, nim dan nama dosen",
+                        "Ubah rute pengiriman form menuju file backend lokal (misal: login.php) untuk menyimpan input username & password ke dalam file teks atau database."
+                    ]
+                }
+            };
+
+            const prak = pDB[id];
+            document.getElementById('prakDisplay').innerHTML = `
+                <div class="space-y-8">
+                    <img src="${prak.img}" class="w-full h-80 object-cover rounded-[35px] mb-8 border border-white/10">
+                    <h4 class="text-3xl font-black text-white">${prak.t}</h4>
+                    <div class="grid lg:grid-cols-2 gap-8">
+                        <div class="bg-white/5 p-6 rounded-2xl">
+                            <p class="text-[10px] font-bold text-cyan-500 uppercase tracking-widest mb-2">Alat & Bahan</p>
+                            <p class="text-sm text-slate-400">${prak.a}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <h5 class="text-xs font-bold text-cyan-400 uppercase tracking-[4px]">Jobsheet & Langkah Kerja</h5>
+                        ${prak.s.map((step, i) => `
+                            <div class="flex gap-6 p-6 bg-slate-900/50 rounded-3xl border border-white/5">
+                                <div class="w-10 h-10 bg-cyan-500/20 text-cyan-400 flex-shrink-0 flex items-center justify-center rounded-xl font-black italic">0${i+1}</div>
+                                <p class="text-sm leading-relaxed text-slate-400">${step}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            window.scrollTo({ top: document.getElementById('prakDisplay').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        // Sidebar Toggle Mobile
+        document.getElementById('navToggle').onclick = () => {
+            document.getElementById('sidebar').classList.toggle('hidden');
+        };
+
+        // Initialize Default States
+        window.onload = () => {
+            loadMateri(1);
+            renderQuestions(1);
+            document.getElementById('tugasDate').valueAsDate = new Date();
+        };
+    </script>
+</body>
+</html>
